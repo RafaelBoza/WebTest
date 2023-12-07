@@ -17,5 +17,6 @@ namespace WebTest.Models
         public string City { get; set; }
         public string StateId { get; set; }
         public string ZipCode { get; set; }  
+
     }
 }

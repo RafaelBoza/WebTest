@@ -11,8 +11,8 @@ namespace WebTest
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            MyContext context = new MyContext();
-            var items =context.Items.ToList();
+           
+           
         }
     }
 }

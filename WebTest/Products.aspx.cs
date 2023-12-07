@@ -14,10 +14,23 @@ namespace WebTest
         string tipo = "error";
         string Msj = string.Empty;
         string titulo = "Validation Error";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             context = new MyContext();
-            BindGridView();
+            if (HttpContext.Current.Session["Action"] != null && (bool)HttpContext.Current.Session["Action"])
+            {
+                mv.SetActiveView(v2);
+            }
+            else
+            {
+                mv.SetActiveView(v1);
+            }
+            if (!IsPostBack)
+            {
+                HttpContext.Current.Session["Mode"] = null;
+                BindGridView();
+            }           
         }
 
         private void ClearControls()
@@ -30,7 +43,9 @@ namespace WebTest
         {
             GvItems.DataSource = null;
             GvItems.Visible = true;
-            GvItems.DataSource = context.Items.Select((x) => new { x.Price, x.Name }).ToList();
+            List<Item> items = context.Items.ToList();
+            HttpContext.Current.Session["Products"] = items;
+            GvItems.DataSource = items.Select((x) => new { Price = x.Price.ToString("C2"), x.Name }).ToList();
             GvItems.DataBind();            
         }
 
@@ -38,13 +53,13 @@ namespace WebTest
         {
             if(string.IsNullOrEmpty(Name.Text))
             {              
-                Msj = "The item name cannot be empty";              
+                Msj = "The Product name cannot be empty";              
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ramdomtext", "alertme('" + titulo + "','" + Msj + "','" + tipo + "');", true);
                 return;
             }
             if(string.IsNullOrEmpty(Price.Text))
             {                              
-                Msj = "The item price cannot be empty";               
+                Msj = "The Product price cannot be empty";               
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ramdomtext", "alertme('" + titulo + "','" + Msj + "','" + tipo + "');", true);
                 return;
             }
@@ -71,27 +86,92 @@ namespace WebTest
                 return;
             }
             item.Price = temp_price;
-            if(context.Items.Any(x => x.Name == item.Name))
-            {                
-                Msj = "There is already an Item with the same name";             
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ramdomtext", "alertme('" + titulo + "','" + Msj + "','" + tipo + "');", true);
-                return;
-            }
-            context.Items.Add(item);
-            try
+            if(HttpContext.Current.Session["Mode"]!=null)
             {
-                context.SaveChanges();
-                ClearControls();
+                if(HttpContext.Current.Session["Mode"].ToString() == "Edit")
+                {
+                    string olditemName = HttpContext.Current.Session["OldItemName"].ToString();
+                    var dbitem = context.Items.FirstOrDefault(x => x.Name == olditemName);
+                    dbitem.UpdatedAt = DateTime.Now;
+                    dbitem.Name = item.Name;
+                    dbitem.Price = item.Price;
+                    context.SaveChanges();
+                    ClearControls();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Msj = ex.Message;
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ramdomtext", "alertme('" + titulo + "','" + Msj + "','" + tipo + "');", true);
-                return;
+                if (context.Items.Any(x => x.Name == item.Name))
+                {
+                    Msj = "There is already an Product with the same name";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ramdomtext", "alertme('" + titulo + "','" + Msj + "','" + tipo + "');", true);
+                    return;
+                }
+                context.Items.Add(item);
+                try
+                {
+                    context.SaveChanges();
+                    ClearControls();
+                }
+                catch (Exception ex)
+                {
+                    Msj = ex.Message;
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ramdomtext", "alertme('" + titulo + "','" + Msj + "','" + tipo + "');", true);
+                    return;
+                }
             }
-            BindGridView();
-            
-          
+            HttpContext.Current.Session["Mode"] = null;
+            HttpContext.Current.Session["OldItemName"] = null;
+            BindGridView();    
+        }
+
+        protected void GvItems_RowCommand(object sender, GridViewCommandEventArgs e)
+        {                       
+
+            //Edit Mode
+            if (e.CommandName == "Select")
+            {
+                int rowIndex = int.Parse(e.CommandArgument.ToString());
+                GridViewRow row = GvItems.Rows[rowIndex];
+
+                string itemName = row.Cells[0].Text;
+                var item = context.Items.FirstOrDefault(x => x.Name == itemName);
+                Name.Text = item.Name;
+                Price.Text = item.Price.ToString();
+                HttpContext.Current.Session["Mode"] = "Edit";
+                HttpContext.Current.Session["OldItemName"] = item.Name;
+            }
+            else
+            {
+                string itemName = todelete.Value;
+                var item = context.Items.FirstOrDefault(x => x.Name == itemName);
+                if (context.ProductLines.Any(x => x.ItemId == item.Id))
+                {
+                    HttpContext.Current.Session["Action"] = true;
+                    mv.SetActiveView(v2);
+                    Response.Redirect("Products.aspx");
+                }
+                else
+                {
+                    context.Items.Remove(item);
+                    context.SaveChanges();
+                    BindGridView();
+                    HttpContext.Current.Session["Action"] = false;
+                    Response.Redirect("Products.aspx");
+                }               
+               
+            }
+        }
+        protected void btn_return_Click(object sender, EventArgs e)
+        {
+            mv.SetActiveView(v1);
+            HttpContext.Current.Session["Action"] = false;
+            Response.Redirect("Products.aspx");
+        }
+        protected void btm_clear_Click(object sender, EventArgs e)
+        {
+            ClearControls();
+            HttpContext.Current.Session["Mode"] = null;
         }
     }
 }

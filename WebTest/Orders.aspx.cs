@@ -22,6 +22,7 @@ namespace WebTest
             drop_accounts.DataBind();
             drop_accounts.SelectedIndex = -1;
         }
+
         private void BindGridView(int account_id)
         {
             GvOrders.DataSource = null;
@@ -52,6 +53,7 @@ namespace WebTest
             }           
             GvOrders.DataBind();
         }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             context = new MyContext();
@@ -67,6 +69,22 @@ namespace WebTest
             int account_id = int.Parse(drop_accounts.SelectedValue);
             BindGridView(account_id);
         }
-        
+
+        protected void btn_createOrder_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ProcessOrder");
+        }
+
+        protected void GvOrders_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            int orderId = int.Parse(todelete.Value);
+            var order = context.Orders.FirstOrDefault(x => x.Id == orderId);
+            var lines = context.ProductLines.Where(x => x.OrderId == orderId).ToList();
+            context.ProductLines.RemoveRange(lines);
+            context.SaveChanges();
+            context.Orders.Remove(order);
+            context.SaveChanges();
+            Response.Redirect("Orders");
+        }
     }
 }

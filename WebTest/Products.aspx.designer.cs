@@ -15,6 +15,24 @@ namespace WebTest
     {
 
         /// <summary>
+        /// mv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.MultiView mv;
+
+        /// <summary>
+        /// v1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View v1;
+
+        /// <summary>
         /// up1 control.
         /// </summary>
         /// <remarks>
@@ -51,6 +69,24 @@ namespace WebTest
         protected global::System.Web.UI.WebControls.Button btnSave;
 
         /// <summary>
+        /// btm_clear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btm_clear;
+
+        /// <summary>
+        /// todelete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField todelete;
+
+        /// <summary>
         /// GvItems control.
         /// </summary>
         /// <remarks>
@@ -58,5 +94,32 @@ namespace WebTest
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GvItems;
+
+        /// <summary>
+        /// v2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View v2;
+
+        /// <summary>
+        /// check control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image check;
+
+        /// <summary>
+        /// btn_return control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_return;
     }
 }

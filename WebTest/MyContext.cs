@@ -25,6 +25,7 @@ namespace WebTest
          public virtual DbSet<Account> Accounts { get; set; }
          public virtual DbSet<Order> Orders { get; set; }
          public virtual DbSet<ProductLine> ProductLines { get; set; }
+         public virtual DbSet<State> States { get; set; }
     }
 
     
