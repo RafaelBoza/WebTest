@@ -14,26 +14,56 @@ namespace WebTest
         protected void Page_Load(object sender, EventArgs e)
         {
             context = new MyContext();
-            if(!context.Accounts.Any())
+            //preload with some States
+            if (!context.States.Any())
+            {
+                var state1 = new State
+                {
+                    Name = "Republic of Cuba",
+                    Id = "CUB"
+                };
+                var state2 = new State
+                {
+                    Name = "United States of America",
+                    Id = "USA"
+                };
+                var state3 = new State
+                {
+                    Name = "France",
+                    Id = "FRA"
+                };
+                context.States.Add(state1);
+                context.States.Add(state2);
+                context.States.Add(state3);
+                context.SaveChanges();
+            }
+
+            //Preload with some Acccounts
+            if (!context.Accounts.Any())
             {
                 var cuenta = new Account
                 {
-                    Name = "Etecsa"
+                    Name = "Etecsa",
+                    StateId = "CUB"
+
                 };
                 var cuenta1 = new Account
                 {
-                    Name = "Cubacel"
+                    Name = "Cubacel",
+                    StateId = "CUB"
                 };
                 var cuenta2 = new Account
                 {
-                    Name = "Mobitel"
+                    Name = "Mobitel",
+                    StateId = "USA"
                 };
                 context.Accounts.Add(cuenta);
                 context.Accounts.Add(cuenta1);
                 context.Accounts.Add(cuenta2);
                 context.SaveChanges();
             }
-            if(!context.Items.Any())
+            //Preload with some Products
+            if (!context.Items.Any())
             {
                 var item1 = new Item
                 {
@@ -105,7 +135,6 @@ namespace WebTest
                 context.Items.Add(item9);
                 context.Items.Add(item10);
                 context.SaveChanges();
-
             }
         }
     }

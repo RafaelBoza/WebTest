@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Accounts.aspx" />
+    <Content Include="Attention-sign-icon.png" />
     <Content Include="Orders.aspx" />
     <Content Include="Products.aspx" />
     <Content Include="App_Data\Database1.mdf" />
